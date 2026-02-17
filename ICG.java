@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class CodeGenerationForIf {
+public class ICG {
     public static void main(String[] args) {
         // Example input: if (x > 5) { y = x * 2; }
         String condition = "x > 5";

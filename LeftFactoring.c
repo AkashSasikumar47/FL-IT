@@ -6,7 +6,8 @@ int main() {
     int i, j = 0, k = 0, l = 0, pos;
 
     printf("Enter Production : A->");
-    gets(gram);
+    fgets(gram, sizeof(gram), stdin);
+    gram[strcspn(gram, "\n")] = '\0'; // Remove trailing newline
 
     for(i = 0; gram[i] != '|'; i++, j++)
         part1[j] = gram[i];

@@ -10,4 +10,4 @@ void main()
 yylex();
 printf("\nNumber of Capital letters in the given input - %d\n", count);
 }
-int yywrap(){}
+int yywrap(){ return 1; }

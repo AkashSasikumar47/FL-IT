@@ -10,7 +10,7 @@ class TreeNode {
     }
 }
 
-public class SyntaxTreeTraversal {
+public class SyntaxTreeArithmetic {
     public static int traverseAndCalculate(TreeNode node) {
         if (node == null) {
             return 0;

@@ -21,6 +21,9 @@ int main()
 
 int yywrap() { return 1; }
 
-flex sample.flex
-gcc lex.yy.c
-a.exe
+/*
+TO COMPILE AND RUN:
+flex Operators&Identifiers.lex
+gcc lex.yy.c -o operators_identifiers
+./operators_identifiers
+*/
