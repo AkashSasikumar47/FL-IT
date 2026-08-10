@@ -1,4 +1,4 @@
-# fl-it
+# FL-IT
 
 Command reference for day-to-day FL work — WHS App, SSH, and TC27.
 
@@ -8,11 +8,11 @@ Command reference for day-to-day FL work — WHS App, SSH, and TC27.
 
 `index.html` reads the markdown files at runtime and renders them as tabs. There is no build step and no dependencies — the `.md` files are the single source of truth.
 
-| File | Tab |
-|------|-----|
+| File         | Tab     |
+| ------------ | ------- |
 | `WHS-APP.md` | WHS App |
-| `SSH.md` | SSH |
-| `TC27.md` | TC27 |
+| `SSH.md`     | SSH     |
+| `TC27.md`    | TC27    |
 
 Click any command line to copy it. Barcodes in the Test Barcodes table are click-to-copy too. Press `/` to filter.
 
