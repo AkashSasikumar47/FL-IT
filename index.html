@@ -5,7 +5,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
-  <title>fl-it — Command Reference</title>
+  <title>FL-IT</title>
+  <link rel="icon" type="image/svg+xml" href="FL-IT-Logo.svg">
   <style>
     :root {
       --bg: #f7f8fa;
@@ -75,12 +76,11 @@
       flex: none;
     }
 
-    .brand .dot {
-      width: 24px;
-      height: 24px;
+    .brand .logo {
+      display: block;
+      width: 26px;
+      height: 26px;
       border-radius: 7px;
-      background: linear-gradient(145deg, #14b8a6, #0d9488 55%, #0f766e);
-      box-shadow: 0 4px 12px -4px rgba(13, 148, 136, .55);
     }
 
     .brand span {
@@ -517,7 +517,7 @@
 
   <header>
     <div class="bar">
-      <div class="brand"><span class="dot"></span><span>FL-IT</span></div>
+      <div class="brand"><img class="logo" src="FL-IT-Logo.svg" alt="" width="26" height="26"><span>FL-IT</span></div>
       <div class="tabs" id="tabs" role="tablist"></div>
       <div class="search">
         <svg viewBox="0 0 24 24">
@@ -842,7 +842,7 @@
         <strong>Couldn't load the markdown files.</strong>
         ${esc(String(err.message || err))}
         <p style="margin-top:10px">Opened straight from disk? Browsers block <code>fetch()</code> on <code>file://</code>. Serve the folder instead:</p>
-        <pre>cd fl-it &amp;&amp; python3 -m http.server 8080
+        <pre>python3 -m http.server 8080
 # then open http://localhost:8080</pre>
       </div>`;
           return;
