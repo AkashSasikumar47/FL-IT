@@ -1,0 +1,861 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>fl-it — Command Reference</title>
+  <style>
+    :root {
+      --bg: #f7f8fa;
+      --panel: #ffffff;
+      --tint: #f3f5f7;
+      --border: #e4e8ed;
+      --border-strong: #d5dbe2;
+      --text: #131a22;
+      --muted: #5d6b7a;
+      --faint: #8d99a6;
+      --accent: #0d9488;
+      --accent-soft: #e6f6f4;
+      --accent-line: #9fded6;
+      --accent-deep: #0b7a70;
+      --shadow: 0 1px 2px rgba(19, 26, 34, .04), 0 8px 24px -12px rgba(19, 26, 34, .14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 15px/1.6 ui-sans-serif, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: var(--accent-deep);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* ---------- header ---------- */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, .82);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+    }
+
+    .bar {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 12px clamp(16px, 4vw, 32px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      flex: none;
+    }
+
+    .brand .dot {
+      width: 24px;
+      height: 24px;
+      border-radius: 7px;
+      background: linear-gradient(145deg, #14b8a6, #0d9488 55%, #0f766e);
+      box-shadow: 0 4px 12px -4px rgba(13, 148, 136, .55);
+    }
+
+    .brand span {
+      font-size: 15px;
+      font-weight: 650;
+      letter-spacing: -.01em;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 3px;
+      padding: 3px;
+      border-radius: 11px;
+      background: var(--tint);
+      border: 1px solid var(--border);
+    }
+
+    .tab {
+      appearance: none;
+      border: 1px solid transparent;
+      background: none;
+      cursor: pointer;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font: inherit;
+      font-size: 13.5px;
+      font-weight: 550;
+      color: var(--muted);
+      white-space: nowrap;
+      transition: color .15s, background .15s, box-shadow .15s;
+    }
+
+    .tab:hover {
+      color: var(--text);
+    }
+
+    .tab[aria-selected="true"] {
+      background: var(--panel);
+      color: var(--accent-deep);
+      font-weight: 620;
+      border-color: var(--border-strong);
+      box-shadow: 0 1px 2px rgba(19, 26, 34, .06);
+    }
+
+    .search {
+      position: relative;
+      margin-left: auto;
+      flex: 0 1 240px;
+      min-width: 130px;
+    }
+
+    .search input {
+      width: 100%;
+      padding: 7px 30px 7px 31px;
+      border-radius: 9px;
+      border: 1px solid var(--border-strong);
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      font-size: 13.5px;
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+    }
+
+    .search input::placeholder {
+      color: var(--faint);
+    }
+
+    .search input:focus {
+      border-color: var(--accent-line);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    .search svg {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 14px;
+      height: 14px;
+      stroke: var(--faint);
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .search kbd {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      font: inherit;
+      font-size: 10px;
+      color: var(--faint);
+      border: 1px solid var(--border-strong);
+      border-radius: 4px;
+      padding: 0 5px;
+      pointer-events: none;
+      transition: opacity .15s;
+    }
+
+    .search input:focus~kbd,
+    .search input:not(:placeholder-shown)~kbd {
+      opacity: 0;
+    }
+
+    /* ---------- content ---------- */
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 30px clamp(16px, 4vw, 32px) 100px;
+    }
+
+    .doc[hidden] {
+      display: none;
+    }
+
+    h2.doc-title {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin: 0 0 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      font-size: 25px;
+      font-weight: 680;
+      letter-spacing: -.022em;
+    }
+
+    h2.doc-title .src {
+      margin-left: auto;
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--faint);
+    }
+
+    section.sec {
+      scroll-margin-top: 70px;
+    }
+
+    section.sec+section.sec {
+      margin-top: 28px;
+    }
+
+    section.sec>h3 {
+      margin: 0 0 12px;
+      font-size: 17px;
+      font-weight: 650;
+      letter-spacing: -.012em;
+    }
+
+    section.sec>h4 {
+      margin: 0 0 10px;
+      font-size: 11.5px;
+      font-weight: 660;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--faint);
+    }
+
+    p {
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+
+    ul.md {
+      margin: 0 0 14px;
+      padding-left: 18px;
+    }
+
+    ul.md li {
+      margin: 4px 0;
+      color: var(--muted);
+    }
+
+    ul.md li::marker {
+      color: var(--accent);
+    }
+
+    /* ---------- command blocks ---------- */
+    .block {
+      margin: 0 0 14px;
+      padding: 7px 0;
+      border-radius: 11px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .ln {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      padding: 3px 14px 3px 12px;
+      font-family: ui-monospace, "SF Mono", "JetBrains Mono", "Menlo", "Cascadia Code", monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-word;
+      border-left: 2px solid transparent;
+      cursor: pointer;
+      transition: background .12s, border-color .12s;
+    }
+
+    .ln::before {
+      content: "$";
+      flex: none;
+      color: var(--faint);
+      font-size: 12px;
+    }
+
+    .ln:hover {
+      background: var(--accent-soft);
+      border-left-color: var(--accent);
+    }
+
+    .ln:hover::before {
+      color: var(--accent);
+    }
+
+    .ln.copied {
+      background: var(--accent-soft);
+      border-left-color: var(--accent);
+    }
+
+    .ln.copied::after {
+      content: "copied";
+      margin-left: auto;
+      padding-left: 14px;
+      font-size: 10.5px;
+      letter-spacing: .05em;
+      color: var(--accent-deep);
+    }
+
+    .ln.note {
+      color: var(--faint);
+      cursor: default;
+      font-style: italic;
+      font-size: 12px;
+      letter-spacing: .01em;
+    }
+
+    .ln.note::before {
+      content: "#";
+    }
+
+    .ln.note:hover {
+      background: none;
+      border-left-color: transparent;
+    }
+
+    .ln.note:hover::before {
+      color: var(--faint);
+    }
+
+    .ln.spacer {
+      height: 9px;
+      padding: 0;
+      cursor: default;
+    }
+
+    .ln.spacer::before {
+      content: "";
+    }
+
+    .ln.spacer:hover {
+      background: none;
+      border-left-color: transparent;
+    }
+
+    /* ---------- tables ---------- */
+    .table-wrap {
+      margin: 0 0 16px;
+      overflow-x: auto;
+      border-radius: 11px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 13.5px;
+    }
+
+    thead th {
+      text-align: left;
+      padding: 9px 14px;
+      white-space: nowrap;
+      font-size: 11px;
+      font-weight: 660;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--faint);
+      background: var(--tint);
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody td {
+      padding: 8px 14px;
+      border-top: 1px solid var(--border);
+      vertical-align: top;
+      color: var(--muted);
+    }
+
+    tbody tr:first-child td {
+      border-top: none;
+    }
+
+    tbody td:first-child {
+      color: var(--text);
+      font-weight: 560;
+      white-space: nowrap;
+    }
+
+    code.chip {
+      display: inline-block;
+      margin: 2px 3px 2px 0;
+      padding: 2px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      background: var(--accent-soft);
+      color: var(--accent-deep);
+      border: 1px solid transparent;
+      font-family: ui-monospace, "SF Mono", "Menlo", monospace;
+      font-size: 12.5px;
+      transition: border-color .12s, background .12s;
+    }
+
+    code.chip:hover {
+      border-color: var(--accent-line);
+    }
+
+    code.chip.copied {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* ---------- states ---------- */
+    .hidden {
+      display: none !important;
+    }
+
+    .empty,
+    .error {
+      margin: 40px auto;
+      max-width: 540px;
+      padding: 22px 24px;
+      border-radius: 11px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--muted);
+      box-shadow: var(--shadow);
+    }
+
+    .empty {
+      text-align: center;
+    }
+
+    .error strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .error pre {
+      margin: 10px 0 0;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: var(--tint);
+      color: var(--text);
+      font-size: 12.5px;
+      overflow-x: auto;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 26px;
+      transform: translate(-50%, 12px);
+      padding: 8px 16px;
+      border-radius: 999px;
+      pointer-events: none;
+      z-index: 40;
+      background: var(--text);
+      color: #fff;
+      font-size: 13px;
+      box-shadow: 0 8px 24px -8px rgba(19, 26, 34, .45);
+      opacity: 0;
+      transition: opacity .18s, transform .18s;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    @media (max-width: 700px) {
+      .bar {
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .search {
+        flex-basis: 100%;
+        margin-left: 0;
+        order: 3;
+      }
+
+      .tabs {
+        overflow-x: auto;
+      }
+    }
+
+    @media print {
+      header {
+        position: static;
+      }
+
+      .search,
+      .tabs {
+        display: none;
+      }
+
+      .doc[hidden] {
+        display: block !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="bar">
+      <div class="brand"><span class="dot"></span><span>FL-IT</span></div>
+      <div class="tabs" id="tabs" role="tablist"></div>
+      <div class="search">
+        <svg viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="7" />
+          <path d="M20 20l-3.5-3.5" />
+        </svg>
+        <input id="q" type="search" placeholder="Filter…" autocomplete="off" spellcheck="false">
+        <kbd>/</kbd>
+      </div>
+    </div>
+  </header>
+
+  <main id="content">
+    <div class="empty">Loading…</div>
+  </main>
+  <div class="toast" id="toast"></div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      // Files shown as tabs, in order. First one is the default.
+      // Add a file here and it appears — nothing else to change.
+      const DOCS = [
+        { file: "WHS-APP.md", title: "WHS App", id: "whs-app" },
+        { file: "SSH.md", title: "SSH", id: "ssh" },
+        { file: "TC27.md", title: "TC27", id: "tc27" },
+      ];
+
+      /* ---------------- markdown ---------------- */
+      // Small on purpose: headings, fenced code, pipe tables, bullets,
+      // inline `code`, bare URLs. No emphasis parsing — barcodes here use `*`.
+
+      const esc = s => s.replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+      function parse(src) {
+        const lines = src.replace(/\r\n?/g, "\n").split("\n");
+        const blocks = [];
+        let i = 0;
+
+        while (i < lines.length) {
+          const line = lines[i];
+
+          if (/^\s*```/.test(line)) {
+            const body = [];
+            i++;
+            while (i < lines.length && !/^\s*```/.test(lines[i])) body.push(lines[i++]);
+            i++;
+            blocks.push({ type: "code", lines: body });
+            continue;
+          }
+
+          const h = line.match(/^(#{1,6})\s+(.+?)\s*$/);
+          if (h) { blocks.push({ type: "heading", level: h[1].length, text: h[2] }); i++; continue; }
+
+          if (/^\s*\|/.test(line) && /^\s*\|[\s:|-]+\|?\s*$/.test(lines[i + 1] || "")) {
+            const raw = [];
+            while (i < lines.length && /^\s*\|/.test(lines[i])) raw.push(lines[i++]);
+            const cells = raw.map(r => r.trim().replace(/^\|/, "").replace(/\|$/, "").split("|").map(c => c.trim()));
+            blocks.push({ type: "table", head: cells[0], body: cells.slice(2) });
+            continue;
+          }
+
+          if (/^\s*[-*+]\s+/.test(line)) {
+            const items = [];
+            while (i < lines.length && /^\s*[-*+]\s+/.test(lines[i])) items.push(lines[i++].replace(/^\s*[-*+]\s+/, ""));
+            blocks.push({ type: "list", items });
+            continue;
+          }
+
+          if (!line.trim()) { i++; continue; }
+
+          const para = [];
+          while (i < lines.length && lines[i].trim() && !/^\s*(```|#{1,6}\s|\||[-*+]\s)/.test(lines[i])) para.push(lines[i++]);
+          blocks.push({ type: "para", text: para.join(" ") });
+        }
+        return blocks;
+      }
+
+      function inline(text) {
+        return esc(text).split(/(`[^`]+`)/g).map(part => {
+          if (part.length > 2 && part.startsWith("`") && part.endsWith("`")) {
+            return `<code class="chip" tabindex="0">${part.slice(1, -1)}</code>`;
+          }
+          return part.replace(/(https?:\/\/[^\s<]+?)([.,;:)]?(?=\s|$))/g, '<a href="$1" target="_blank" rel="noopener">$1</a>$2');
+        }).join("");
+      }
+
+      // A line inside a fenced block that reads as prose, not a command —
+      // e.g. TC27's "Windows PowerShell (Administrator) 1" separators.
+      const isNote = t => t.startsWith("#") || (/\s/.test(t) && !/[|&;<>$/\\=]/.test(t) && /^[A-Z]/.test(t) && !/^[a-z-]+\s/.test(t) && t.split(/\s+/).length > 1 && !/^(sudo|git|npx|yarn|npm|cd|export|adb|kubectl|aws|ssh|watch|python|source|jupyter|import|deactivate|which)\b/i.test(t));
+
+      /* ---------------- render ---------------- */
+
+      const el = (tag, cls, html) => {
+        const n = document.createElement(tag);
+        if (cls) n.className = cls;
+        if (html != null) n.innerHTML = html;
+        return n;
+      };
+
+      function renderBlock(b) {
+        if (b.type === "code") {
+          const wrap = el("div", "block");
+          for (const raw of b.lines) {
+            const t = raw.trim();
+            if (!t) { wrap.append(el("div", "ln spacer")); continue; }
+            const note = isNote(t);
+            const ln = el("div", "ln" + (note ? " note" : ""));
+            ln.append(document.createTextNode(t.replace(/^#\s*/, "")));
+            if (!note) ln.dataset.copy = t;
+            ln.dataset.text = t.toLowerCase();
+            wrap.append(ln);
+          }
+          return wrap;
+        }
+
+        if (b.type === "table") {
+          const wrap = el("div", "table-wrap");
+          const table = el("table");
+          const thead = el("thead");
+          const hr = el("tr");
+          b.head.forEach(h => hr.append(el("th", null, inline(h))));
+          thead.append(hr);
+          const tbody = el("tbody");
+          b.body.forEach(row => {
+            const tr = el("tr");
+            row.forEach(c => tr.append(el("td", null, inline(c))));
+            tr.dataset.text = row.join(" ").toLowerCase();
+            tbody.append(tr);
+          });
+          table.append(thead, tbody);
+          wrap.append(table);
+          return wrap;
+        }
+
+        if (b.type === "list") {
+          const ul = el("ul", "md");
+          b.items.forEach(it => {
+            const li = el("li", null, inline(it));
+            li.dataset.text = it.toLowerCase();
+            ul.append(li);
+          });
+          return ul;
+        }
+
+        const p = el("p", null, inline(b.text));
+        p.dataset.text = b.text.toLowerCase();
+        return p;
+      }
+
+      function renderDoc(doc, blocks) {
+        // Drop a leading heading that just repeats the tab name.
+        const norm = s => s.toLowerCase().replace(/[^a-z0-9]/g, "");
+        if (blocks[0] && blocks[0].type === "heading" && blocks[0].level <= 2 && norm(blocks[0].text) === norm(doc.title)) {
+          blocks = blocks.slice(1);
+        }
+
+        const article = el("article", "doc");
+        article.id = doc.id;
+        article.hidden = true;
+        article.append(el("h2", "doc-title", `${esc(doc.title)}<span class="src">${esc(doc.file)}</span>`));
+
+        let sec = el("section", "sec");
+        article.append(sec);
+
+        for (const b of blocks) {
+          if (b.type === "heading") {
+            sec = el("section", "sec");
+            sec.append(el(b.level >= 3 ? "h4" : "h3", null, esc(b.text)));
+            article.append(sec);
+            continue;
+          }
+          sec.append(renderBlock(b));
+        }
+
+        const first = article.querySelector("section.sec");
+        if (first && !first.children.length) first.remove();
+        return article;
+      }
+
+      /* ---------------- tabs ---------------- */
+
+      let active = DOCS[0].id;
+
+      function show(id, push) {
+        if (!document.getElementById(id)) id = DOCS[0].id;
+        active = id;
+        document.querySelectorAll("article.doc").forEach(a => (a.hidden = a.id !== id));
+        document.querySelectorAll("#tabs .tab").forEach(t =>
+          t.setAttribute("aria-selected", String(t.dataset.id === id)));
+        if (push && location.hash.slice(1) !== id) history.replaceState(null, "", "#" + id);
+        if (q.value) { q.value = ""; applyFilter(); }
+        window.scrollTo({ top: 0 });
+      }
+
+      function buildTabs() {
+        const bar = document.getElementById("tabs");
+        bar.innerHTML = "";
+        DOCS.forEach(d => {
+          const b = el("button", "tab", esc(d.title));
+          b.type = "button";
+          b.dataset.id = d.id;
+          b.setAttribute("role", "tab");
+          b.setAttribute("aria-selected", "false");
+          b.addEventListener("click", () => show(d.id, true));
+          bar.append(b);
+        });
+      }
+
+      /* ---------------- copy ---------------- */
+
+      const toastEl = document.getElementById("toast");
+      let toastTimer;
+      function toast(msg) {
+        toastEl.textContent = msg;
+        toastEl.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toastEl.classList.remove("show"), 1300);
+      }
+
+      async function copy(text) {
+        try {
+          await navigator.clipboard.writeText(text);
+          return true;
+        } catch {
+          const ta = document.createElement("textarea");
+          ta.value = text;
+          ta.style.cssText = "position:fixed;top:0;opacity:0";
+          document.body.append(ta);
+          ta.select();
+          let ok = false;
+          try { ok = document.execCommand("copy"); } catch { }
+          ta.remove();
+          return ok;
+        }
+      }
+
+      function flash(node) {
+        node.classList.add("copied");
+        setTimeout(() => node.classList.remove("copied"), 900);
+      }
+
+      document.addEventListener("click", async e => {
+        const chip = e.target.closest("code.chip");
+        if (chip) {
+          if (await copy(chip.textContent)) { flash(chip); toast("Copied " + chip.textContent); }
+          return;
+        }
+        const ln = e.target.closest(".ln[data-copy]");
+        if (ln && await copy(ln.dataset.copy)) { flash(ln); toast("Copied"); }
+      });
+
+      document.addEventListener("keydown", e => {
+        if (e.key === "Enter" && e.target.classList?.contains("chip")) e.target.click();
+      });
+
+      /* ---------------- filter ---------------- */
+
+      const q = document.getElementById("q");
+
+      function applyFilter() {
+        const term = q.value.trim().toLowerCase();
+        const doc = document.getElementById(active);
+        if (!doc) return;
+
+        doc.querySelectorAll("[data-text]").forEach(n =>
+          n.classList.toggle("hidden", !!term && !n.dataset.text.includes(term)));
+
+        doc.querySelectorAll(".block").forEach(b => {
+          b.querySelectorAll(".ln.spacer").forEach(s => s.classList.toggle("hidden", !!term));
+          const any = [...b.querySelectorAll(".ln[data-text]")].some(n => !n.classList.contains("hidden"));
+          b.classList.toggle("hidden", !!term && !any);
+        });
+        doc.querySelectorAll(".table-wrap").forEach(t => {
+          const any = [...t.querySelectorAll("tbody tr")].some(n => !n.classList.contains("hidden"));
+          t.classList.toggle("hidden", !!term && !any);
+        });
+        doc.querySelectorAll("ul.md").forEach(u => {
+          const any = [...u.querySelectorAll("li")].some(n => !n.classList.contains("hidden"));
+          u.classList.toggle("hidden", !!term && !any);
+        });
+        doc.querySelectorAll("section.sec").forEach(s => {
+          const any = [...s.children].some(c => !c.classList.contains("hidden") && !/^H[1-6]$/.test(c.tagName));
+          s.classList.toggle("hidden", !!term && !any);
+        });
+
+        let none = document.getElementById("noresult");
+        const anySec = [...doc.querySelectorAll("section.sec")].some(s => !s.classList.contains("hidden"));
+        if (term && !anySec) {
+          if (!none) {
+            none = el("div", "empty");
+            none.id = "noresult";
+            document.getElementById("content").append(none);
+          }
+          none.textContent = `Nothing matches “${q.value.trim()}”.`;
+          none.classList.remove("hidden");
+        } else if (none) {
+          none.classList.add("hidden");
+        }
+      }
+
+      q.addEventListener("input", applyFilter);
+      document.addEventListener("keydown", e => {
+        if (e.key === "/" && document.activeElement !== q && !e.metaKey && !e.ctrlKey) { e.preventDefault(); q.focus(); q.select(); }
+        if (e.key === "Escape" && document.activeElement === q) { q.value = ""; applyFilter(); q.blur(); }
+      });
+
+      /* ---------------- boot ---------------- */
+
+      (async () => {
+        const content = document.getElementById("content");
+        let parsed;
+        try {
+          parsed = await Promise.all(DOCS.map(async d => {
+            const res = await fetch(d.file);
+            if (!res.ok) throw new Error(`${d.file} → HTTP ${res.status}`);
+            return parse(await res.text());
+          }));
+        } catch (err) {
+          content.innerHTML = `<div class="error">
+        <strong>Couldn't load the markdown files.</strong>
+        ${esc(String(err.message || err))}
+        <p style="margin-top:10px">Opened straight from disk? Browsers block <code>fetch()</code> on <code>file://</code>. Serve the folder instead:</p>
+        <pre>cd fl-it &amp;&amp; python3 -m http.server 8080
+# then open http://localhost:8080</pre>
+      </div>`;
+          return;
+        }
+
+        content.innerHTML = "";
+        DOCS.forEach((doc, i) => content.append(renderDoc(doc, parsed[i])));
+        buildTabs();
+        show(location.hash.slice(1) || DOCS[0].id, false);
+        addEventListener("hashchange", () => show(location.hash.slice(1) || DOCS[0].id, false));
+      })();
+    })();
+  </script>
+</body>
+
+</html>
